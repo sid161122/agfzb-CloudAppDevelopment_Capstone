@@ -37,6 +37,45 @@
                 </ul>
             </div>
         </div>
+        <nav>
+            <!-- Your existing navigation items go here -->
+        {% if user.is_authenticated %}
+            <!-- Display user's first name or username -->
+            <p>Welcome, {{ user.first_name|default:user.username }}</p>
+    
+            <!-- Signout link pointing to a signout view -->
+            <form action="{% url 'djangoapp:logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Log Out</button>
+            </form>
+        {% else %}
+            <!-- Form for user login -->
+            <form action="{% url 'djangoapp:registration' %}" method="get">
+                <input class="dropbtn"  type="submit" value="Visitor">
+                <div class="dropdown-content">
+                    <a href="{% url 'djangoapp:registration' %}">Signup</a>
+                    <a href="{% url 'djangoapp:login' %}">Login</a>
+                </div>
+
+
+            <form action="{% url 'djangoapp:login' %}" method="post">
+                {% csrf_token %}
+                <label for="id_username">Username:</label>
+                <input type="text" name="username" id="id_username" required><br>
+                
+                <label for="id_password">Password:</label>
+                <input type="password" name="password" id="id_password" required>
+                
+                <button type="submit">Login</button>
+            </form>
+        
+            <!-- Login link pointing to Django login view -->
+            <a href="{% url 'djangoapp:login' %}">Login</a>
+        
+    
+        {% endif %}
+        </nav>
+        
     </nav>
     <footer>
         <p>Contact Us: <a href="{% url 'djangoapp:contact' %}">Visit our Contact Page</a></p>
