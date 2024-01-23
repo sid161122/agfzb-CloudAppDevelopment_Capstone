@@ -9,6 +9,9 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+from django.http import JsonResponse
+from .models import CarDealer
+
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -94,7 +97,40 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
+def get_dealerships(request):
+    if request.method == "GET":
+        url = "your-cloud-function-domain/dealerships/dealer-get"
+        # Get dealers from the URL
+        dealerships = get_dealers_from_cf(url)
+        # Concat all dealer's short name
+        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # Return a list of dealer short name
+        return HttpResponse(dealer_names)
+
+
+# def get_dealer_details(request):
+#     # Replace 'YOUR_DEALER_GET_SERVICE_URL' with the actual URL of your 'dealer-get' service
+#     dealer_get_service_url = 'YOUR_DEALER_GET_SERVICE_URL'
+    
+#     # Make a GET request to the dealer-get service
+#     response = requests.get(dealer_get_service_url)
+    
+#     # Check if the request was successful (status code 200)
+#     if response.status_code == 200:
+#         # Parse the JSON response
+#         dealers_data = response.json()
+        
+#         # Create a list of CarDealer objects from the response data
+#         dealerships = [CarDealer(**dealer) for dealer in dealers_data]
+        
+#         # Create a list of dictionaries from the CarDealer objects
+#         dealerships_data = [{'full_name': dealer.full_name, 'dealer_id': dealer.dealer_id} for dealer in dealerships]
+        
+#         # Return the list of dealerships as JSON
+#         return JsonResponse(dealerships_data, safe=False)
+    
+#     # If the request was not successful, return an empty list
+#     return JsonResponse([], safe=False)
 # ...
 
 # Create a `add_review` view to submit a review
